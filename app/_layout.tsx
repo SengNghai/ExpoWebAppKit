@@ -1,9 +1,10 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { Platform } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -19,6 +20,12 @@ import ptBR from '@ant-design/react-native/lib/locale-provider/pt_BR'
 import ruRU from '@ant-design/react-native/lib/locale-provider/ru_RU'
 import svSE from '@ant-design/react-native/lib/locale-provider/sv_SE'
 import zhCN from '@ant-design/react-native/lib/locale-provider/zh_CN'
+import { base64ToUint8Array } from '@/libs/uitls/common';
+import { globalSubscribeMethod } from '@/libs/uitls/serviceWorkerManager.ts';
+
+  
+ 
+  
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -90,6 +97,12 @@ export default function RootLayout() {
       import("eruda").then((eruda) => eruda.default.init());
     }
   }, [loaded]);
+
+
+  useEffect(() => {
+    // 订阅推送
+    globalSubscribeMethod('http://localhost:3000/api/subscribe');
+  }, []);
 
   if (!loaded) {
     return null;

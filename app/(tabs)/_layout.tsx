@@ -36,6 +36,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
+          sceneStyle: {
+            backgroundColor: 'red'
+          },
           title: 'Explore',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
