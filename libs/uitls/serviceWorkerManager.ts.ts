@@ -76,3 +76,45 @@ export const publicSendNotification = (API='http://localhost:3000/api/notify') =
         .then((data) => console.log('hello:', data))
         .catch((error) => console.error('hello error:', error.message));
 }
+
+/**
+ * 取消订阅
+ * @param API 服务端取消订阅接口地址
+ * @returns 
+ */
+export const globalUnsubscribeMethod = (API='http://localhost:3000/api/unsubscribe') => {
+    navigator.serviceWorker.ready.then(async (registration) => {
+        await registration.pushManager.getSubscription().then((subscription) => {
+          if (subscription) {
+            console.log('取消订阅:', subscription);
+            subscription.unsubscribe();
+
+            // 将取消订阅信息发送到服务端
+            fetch(API, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                subscription,
+              }),
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error(`HTTP 错误！状态码: ${response.status}`);
+                }
+                return response.json();
+              })
+              .then((data) => console.log('取消订阅成功:', data))
+              .catch((error) => console.error('取消订阅失败:', error.message));
+            
+            console.log('取消订阅成功');
+            localStorage.removeItem('subscription');
+
+          }
+        });
+      });
+}
+
+
+

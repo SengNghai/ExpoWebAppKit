@@ -1,4 +1,4 @@
-import { globalSubscribeMethod, publicSendNotification } from "@/libs/uitls/serviceWorkerManager.ts";
+import { globalSubscribeMethod, globalUnsubscribeMethod, publicSendNotification } from "@/libs/uitls/serviceWorkerManager.ts";
 import { Button } from "@ant-design/react-native";
 import { View, Text } from "react-native";
 
@@ -17,40 +17,7 @@ export default function NotifyScreen() {
   }
   // 取消订阅
   const handleUnsubscribe = () => {
-    // 取消订阅
-    navigator.serviceWorker.ready.then(async (registration) => {
-      await registration.pushManager.getSubscription().then((subscription) => {
-        if (subscription) {
-          console.log('取消订阅:', subscription);
-          subscription.unsubscribe();
-          console.log('取消订阅成功');
-          localStorage.removeItem('subscription');
-
-          // fetch('http://localhost:3000/api/unsubscribe', {
-          //   method: 'DELETE',
-          //   headers: {
-          //     'Content-Type': 'application/json',
-          //   },
-          //   body: JSON.stringify({
-          //     subscription
-          //   }),
-          // })
-          //   .then((response) => {
-          //     if (!response.ok) {
-          //       throw new Error(`HTTP 错误！状态码: ${response.status}`);
-          //     }
-          //     return response.json();
-          //   })
-          //   .then((data) => console.log('取消订阅成功:', data))
-          //   .catch((error) => console.error('取消订阅失败:', error.message));
-          
-        }
-      });
-    });
-
-
-  
-    
+    globalUnsubscribeMethod('http://localhost:3000/api/unsubscribe');
   }
   return (
     <>
