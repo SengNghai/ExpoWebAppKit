@@ -53,6 +53,7 @@ export const publicSendNotification = (API='http://localhost:3000/api/notify') =
         console.log('subscription', subscription);
         if (!subscription) {
             console.error('未找到订阅信息');
+            alert('未找到订阅信息,请先订阅或刷新页面');
             return;
         }
 

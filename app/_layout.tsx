@@ -1,31 +1,25 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Platform } from 'react-native';
+// import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+// import { Platform } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Provider } from '@ant-design/react-native';
-import { Provider as ReduxProvider } from "react-redux";
-import { store } from "@/libs/features/store";
 
-import enUS from '@ant-design/react-native/lib/locale-provider/en_US'
-import esES from '@ant-design/react-native/lib/locale-provider/es_ES'
-import faIR from '@ant-design/react-native/lib/locale-provider/fa_IR'
-import koKR from '@ant-design/react-native/lib/locale-provider/ko_KR'
-import ptBR from '@ant-design/react-native/lib/locale-provider/pt_BR'
-import ruRU from '@ant-design/react-native/lib/locale-provider/ru_RU'
-import svSE from '@ant-design/react-native/lib/locale-provider/sv_SE'
-import zhCN from '@ant-design/react-native/lib/locale-provider/zh_CN'
-import { base64ToUint8Array } from '@/libs/uitls/common';
+
+
 import { globalSubscribeMethod } from '@/libs/uitls/serviceWorkerManager.ts';
 
-  
- 
-  
+import Providered from '@/components/Providered';
+
+
+
+
+
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -33,54 +27,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
-  const [locale, setLocale] = useState('中国');
-
-
-  const languages: Array<any> = [
-    {
-      value: '中国',
-      label: '中国',
-      language: zhCN,
-    },
-    {
-      value: 'English',
-      label: 'English',
-      language: enUS,
-    },
-    {
-      value: 'Русский',
-      label: 'Русский',
-      language: ruRU,
-    },
-    {
-      value: 'Español',
-      label: 'Español',
-      language: esES,
-    },
-    {
-      value: 'Português - BR',
-      label: 'Português - BR',
-      language: ptBR,
-    },
-    {
-      value: 'Sverige',
-      label: 'Sverige',
-      language: svSE,
-    },
-    {
-      value: 'Persian',
-      label: 'Persian',
-      language: faIR,
-    },
-    {
-      value: '한국',
-      label: '한국',
-      language: koKR,
-    },
-  ]
-  const currentLocale = languages.find(
-    (item) => item.value === locale,
-  ).language
+  
 
 
 
@@ -120,14 +67,12 @@ export default function RootLayout() {
   );
   */
   return (
-    <Provider locale={currentLocale}>
-      <ReduxProvider store={store}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-      </ReduxProvider>
-    </Provider>
+    <Providered>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+      <StatusBar style="auto" />
+    </Providered>
   );
 }
