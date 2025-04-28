@@ -45,6 +45,13 @@ export const globalSubscribeMethodBack = (API = 'http://localhost:3000/api/subsc
   }
 }
 
+
+/**
+ * 订阅推送
+ * @param API 服务端订阅接口地址
+ * @param vapidPublicKey VAPID 公钥
+ * @returns 
+ */
 export const globalSubscribeMethod = async (API = 'http://localhost:3000/api/subscribe', vapidPublicKey: string) => {
   // 检查浏览器是否支持 Service Worker
   if (!('serviceWorker' in navigator)) {
