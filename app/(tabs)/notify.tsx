@@ -1,3 +1,4 @@
+import InstallPrompt from "@/components/InstallPrompt";
 import { globalSubscribeMethod, globalUnsubscribeMethod, publicSendNotification } from "@/libs/uitls/serviceWorkerManager.ts";
 import { Button } from "@ant-design/react-native";
 import { View, Text } from "react-native";
@@ -13,16 +14,22 @@ export default function NotifyScreen() {
   // 订阅
   const handleSubscribe = () => {
     // 订阅
-    globalSubscribeMethod('http://localhost:3000/api/subscribe');
+    const vapidPublicKey = 'BI1DH5Pe73fMpZWhXOohot5UB85QlttiTW5CBgDflA_d3FM7iAX2LdPU7ZtaNMXIKFUuyBHkH2FEkHAuLqE4950';
+    globalSubscribeMethod('http://localhost:3000/api/subscribe', vapidPublicKey);
   }
   // 取消订阅
   const handleUnsubscribe = () => {
     globalUnsubscribeMethod('http://localhost:3000/api/unsubscribe');
   }
+
   return (
     <>
-    <View>
-        <Text>subscribe</Text>
+      <View>
+        <Text>Install Prompt</Text>
+        <InstallPrompt />
+      </View>
+      <View>
+        <Text>Subscribe</Text>
         <Button type="warning" onPress={handleSubscribe}>Subscribe</Button>
       </View>
       <View>

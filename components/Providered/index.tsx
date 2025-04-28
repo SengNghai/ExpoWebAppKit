@@ -11,6 +11,7 @@ import ptBR from '@ant-design/react-native/lib/locale-provider/pt_BR'
 import ruRU from '@ant-design/react-native/lib/locale-provider/ru_RU'
 import svSE from '@ant-design/react-native/lib/locale-provider/sv_SE'
 import zhCN from '@ant-design/react-native/lib/locale-provider/zh_CN'
+import InstallPrompt from "../InstallPrompt";
 
 
 

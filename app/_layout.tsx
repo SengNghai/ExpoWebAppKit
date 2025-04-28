@@ -45,12 +45,6 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-
-  useEffect(() => {
-    // 订阅推送
-    globalSubscribeMethod('http://localhost:3000/api/subscribe');
-  }, []);
-
   if (!loaded) {
     return null;
   }
