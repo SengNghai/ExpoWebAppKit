@@ -7,28 +7,22 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-const BasicModal: React.FC<{show: boolean}> = ({show}) => {
-  const [visible, setVisible] = useState(show);
-
-  const toggleModal = () => {
-    setVisible(!visible);
-  };
-
+const BasicModal: React.FC<{visible: boolean, onClose: () => void, onOpen: () => void; }> = ({visible, onClose, onOpen}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={toggleModal} style={styles.button}>
+      <TouchableOpacity onPress={onOpen} style={styles.button}>
         <Text style={styles.buttonText}>打开模态框</Text>
       </TouchableOpacity>
       <Modal
         animationType="fade"
         transparent={true}
-        visible={show}
-        onRequestClose={toggleModal}
+        visible={visible}
+        onRequestClose={onClose}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>这是一个模态框</Text>
-            <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
               <Text style={styles.closeButtonText}>关闭</Text>
             </TouchableOpacity>
           </View>

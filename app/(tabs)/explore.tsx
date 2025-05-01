@@ -14,6 +14,7 @@ export default function TabTwoScreen() {
 
   const handleOnPress = () => {
     router.push('/notify?type=admin');
+
   }
   return (
     <ParallaxScrollView
