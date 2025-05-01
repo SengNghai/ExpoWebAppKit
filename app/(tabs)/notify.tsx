@@ -2,9 +2,15 @@ import InstallPrompt from "@/components/InstallPrompt";
 import { globalSubscribeMethod, globalUnsubscribeMethod, publicSendNotification } from "@/libs/uitls/serviceWorkerManager.ts";
 import { Button } from "@ant-design/react-native";
 import { View, Text } from "react-native";
+import { useLocalSearchParams } from 'expo-router'
+import { useEffect, useState } from "react";
+import BasicModal from "@/components/BasicModal";
 
 
 export default function NotifyScreen() {
+  const param = useLocalSearchParams();
+  const [show, setShow] = useState<boolean>(false);
+
   // 点击发送通方法
   const handleSendNotification = () => {
     // 发送通知
@@ -21,6 +27,11 @@ export default function NotifyScreen() {
   const handleUnsubscribe = () => {
     globalUnsubscribeMethod('http://localhost:3000/api/unsubscribe');
   }
+
+  useEffect(() => {
+    console.log("param", param.type === 'admin');
+    setShow(param.type === 'admin');
+  }, [param]);
 
   return (
     <>
@@ -40,6 +51,8 @@ export default function NotifyScreen() {
         <Text>unsubscribe</Text>
         <Button type="warning" onPress={handleUnsubscribe}>Unsubscribe</Button>
       </View>
+
+      <BasicModal show={show} />
     </>
   );
 }
