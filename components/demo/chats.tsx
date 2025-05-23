@@ -33,21 +33,12 @@ const ChatsScreen = () => {
   };
 
   useEffect(() => {
-    // 禁止页面整体滚动，但允许 `FlatList` 内部滚动
-    // const preventGlobalScroll = (event: TouchEvent) => {
-    //   if (event.target instanceof HTMLElement && !event.target.closest(".chat-messages")) {
-    //     event.preventDefault();
-    //   }
-    // };
 
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overscrollBehavior = "none";
-    // document.addEventListener("touchmove", preventGlobalScroll, { passive: false });
-
+    document.body.style.overflow = "hidden"; // 禁止页面整体滚动
+    document.documentElement.style.overscrollBehavior = "none"; // 禁止页面整体滚动
     return () => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overscrollBehavior = "auto";
-      // document.removeEventListener("touchmove", preventGlobalScroll);
+      document.body.style.overflow = ""; // 恢复页面整体滚动
+      document.documentElement.style.overscrollBehavior = "auto"; // 恢复页面整体滚动
     };
   }, []);
 
@@ -97,9 +88,10 @@ const ChatsScreen = () => {
               onChangeText={setInput}
               placeholder="输入消息..."
               onFocus={() => flatListRef.current?.scrollToEnd({ animated: true })}
-              keyboardType="default"
-              returnKeyType="send"
+              keyboardType="default" // 指定输入法类型
+              returnKeyType="send" // 指定回车键类型为发送
               blurOnSubmit={false} // 防止提交时自动失去焦点
+              onSubmitEditing={sendMessage} // **回车键触发发送**
             />
             <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
               <Text style={styles.sendButtonText}>发送</Text>
