@@ -1,35 +1,43 @@
 import { ScrollViewStyleReset } from 'expo-router/html';
 import type { PropsWithChildren } from 'react';
 
-// This file is web-only and used to configure the root HTML for every
-// web page during static rendering.
-// The contents of this function only run in Node.js environments and
-// do not have access to the DOM or browser APIs.
+// 这个文件仅适用于 Web 端，配置 HTML 根元素
 export default function Root({ children }: PropsWithChildren) {
   return (
-    <html lang="en">
+    <html lang="zh">
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover, user-scalable=no, maximum-scale=1"
+        />
 
-        {/* Link the PWA manifest file. */}
+        {/* 禁用双指放大 */}
+        <style>
+          {`
+            html, body {
+              touch-action: manipulation; /* 限制缩放和双指手势 */
+              -webkit-user-select: none; /* 禁用文本选中 */
+              user-select: none;
+            }
+          `}
+        </style>
+
+        {/* PWA manifest */}
         <link rel="manifest" href="/manifest.json" />
         <script dangerouslySetInnerHTML={{ __html: sw }} />
 
-        {/*
-          Disable body scrolling on web. This makes ScrollView components work closer to how they do on native.
-          However, body scrolling is often nice to have for mobile web. If you want to enable it, remove this line.
-        */}
+        {/* 禁用 Web 端 body 滚动，使 ScrollView 更接近原生 */}
         <ScrollViewStyleReset />
 
-        {/* Add any additional <head> elements that you want globally available on web... */}
       </head>
       <body>{children}</body>
     </html>
   );
 }
 
+// Service Worker 注册
 const sw = `
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {

@@ -12,20 +12,26 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+<Tabs
+  screenOptions={{
+    tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+    headerShown: false,
+    tabBarButton: HapticTab,
+    tabBarBackground: TabBarBackground,
+    tabBarStyle: Platform.select({
+      ios: {
+        position: "absolute", // 确保不受滚动影响
+        bottom: 0,
+        width: "100%",
+      },
+      android: {
+        elevation: 3,
+        backgroundColor: "#ffffff",
+      },
+    }),
+  }}
+>
+
       <Tabs.Screen
         name="index"
         options={{
@@ -50,6 +56,17 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="chats"
+        options={{
+          title: "Chats",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="paperplane.fill" color={color} />
+          ),
+          tabBarStyle: { display: "none" }, // 隐藏底部导航栏
+        }}
+      />
+
     </Tabs>
   );
 }
