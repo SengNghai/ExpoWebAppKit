@@ -32,6 +32,25 @@ const ChatsScreen = () => {
     inputRef.current?.focus(); // 发送后保持焦点，让键盘不消失
   };
 
+  useEffect(() => {
+    // 禁止页面整体滚动，但允许 `FlatList` 内部滚动
+    // const preventGlobalScroll = (event: TouchEvent) => {
+    //   if (event.target instanceof HTMLElement && !event.target.closest(".chat-messages")) {
+    //     event.preventDefault();
+    //   }
+    // };
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overscrollBehavior = "none";
+    // document.addEventListener("touchmove", preventGlobalScroll, { passive: false });
+
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overscrollBehavior = "auto";
+      // document.removeEventListener("touchmove", preventGlobalScroll);
+    };
+  }, []);
+
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === "ios" ? "padding" : "height"} 
@@ -47,7 +66,9 @@ const ChatsScreen = () => {
       >
         <View style={styles.inner}>
           {/* 头部导航 - 始终固定 */}
-          <View style={styles.header} onStartShouldSetResponder={() => true}>
+          <View style={styles.header} 
+           onStartShouldSetResponder={() => true} // 在 header 组件中添加 onStartShouldSetResponder={() => true} 这样可以阻止页面整体滚动：
+          >
             <Text style={styles.headerText}>微信聊天</Text>
           </View>
 
