@@ -53,7 +53,7 @@ const ChatsScreen = () => {
             Keyboard.dismiss(); // 只有输入框未聚焦时才关闭键盘
           }
         }}
-        accessible={false}
+        accessible={false} // 使 TouchableWithoutFeedback 不可访问，避免干扰到 React Native 的默认行为
       >
         <View style={styles.inner}>
           {/* 头部导航 - 始终固定 */}
@@ -67,13 +67,13 @@ const ChatsScreen = () => {
           <FlatList
             ref={flatListRef}
             data={messages}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
+            keyExtractor={(item) => item.id}  // 为每个消息生成唯一的 key
+            renderItem={({ item }) => ( // 渲染每个消息
               <View style={styles.messageContainer}>
                 <Text style={styles.messageText}>{item.text}</Text>
               </View>
             )}
-            contentContainerStyle={styles.messagesList}
+            contentContainerStyle={styles.messagesList} // 设置内容容器样式
             scrollEnabled={true} // 确保聊天列表可滚动
             keyboardShouldPersistTaps="handled" // 允许点击滚动区域时键盘不关闭
             showsVerticalScrollIndicator={false} // 隐藏滚动条，增强体验
