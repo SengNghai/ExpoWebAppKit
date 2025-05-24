@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -38,7 +38,7 @@ export function useNavigationHistory() {
     const updatedHistory = [...history, path];
     setHistory(updatedHistory);
     await setStorage("navigationHistory", JSON.stringify(updatedHistory));
-    router.push(path);
+    router.push(path as Href);
   };
 
   /** 返回上一个访问的页面 */
@@ -47,7 +47,7 @@ export function useNavigationHistory() {
       const updatedHistory = history.slice(0, -1);
       setHistory(updatedHistory);
       await setStorage("navigationHistory", JSON.stringify(updatedHistory));
-      router.replace(updatedHistory[updatedHistory.length - 1]);
+      router.replace(updatedHistory[updatedHistory.length - 1] as Href);
     } else {
       router.back();
     }

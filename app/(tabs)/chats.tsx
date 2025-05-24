@@ -117,22 +117,23 @@ const ChatsScreen = () => {
           </View>
 
           {/* 聊天信息列表 - 仅允许滚动此区域 */}
-          <FlatList
-            ref={flatListRef}
-            data={messages}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <AnimatedMessage text={item.text} />
-            )}
-            contentContainerStyle={styles.messagesList}
-            scrollEnabled={true} // 确保聊天列表可滚动
-            keyboardShouldPersistTaps="handled" // 允许点击滚动区域时键盘不关闭
-            showsVerticalScrollIndicator={false} // 隐藏滚动条，增强体验
-          />
+            <FlatList
+              ref={flatListRef}
+              data={messages}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <AnimatedMessage text={item.text} />
+              )}
+              contentContainerStyle={styles.messagesList}
+              scrollEnabled={true} // 确保聊天列表可滚动
+              keyboardShouldPersistTaps="handled" // 允许点击滚动区域时键盘不关闭
+              showsVerticalScrollIndicator={false} // 隐藏滚动条，增强体验
+            />
 
           {/* 输入框 - 始终固定 */}
-          <View style={styles.inputContainer}>
+          <View style={styles.inputContainer} onStartShouldSetResponder={() => true}>
             <TextInput
+              onStartShouldSetResponder={() => true}
               ref={inputRef}
               style={styles.input}
               value={input}
