@@ -1,29 +1,61 @@
-import { Href, useRouter } from "expo-router";
-import { useRef } from "react";
+import { useRouter } from "expo-router";
+import { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+/** 判断是否在 Web 端运行 */
+const isWeb = typeof window !== "undefined";
 
 export function useNavigationHistory() {
   const router = useRouter();
-  const historyRef = useRef<string[]>([]); // 存储访问历史
+  const [history, setHistory] = useState<string[]>([]);
 
-  /** 记录访问路径 */
-  const navigate = (path: string) => {
-    historyRef.current.push(path);
-    router.push(path as Href);
+  /** 获取存储方法：Web 用 localStorage，Native 用 AsyncStorage */
+  const getStorage = async (key: string) => {
+    if (isWeb) {
+      return localStorage.getItem(key);
+    } else {
+      return await AsyncStorage.getItem(key);
+    }
+  };
+
+  const setStorage = async (key: string, value: string) => {
+    if (isWeb) {
+      localStorage.setItem(key, value);
+    } else {
+      await AsyncStorage.setItem(key, value);
+    }
+  };
+
+  /** 加载历史记录 */
+  useEffect(() => {
+    getStorage("navigationHistory").then((data) => {
+      if (data) setHistory(JSON.parse(data));
+    });
+  }, []);
+
+  /** 记录访问路径并存储 */
+  const navigate = async (path: string) => {
+    const updatedHistory = [...history, path];
+    setHistory(updatedHistory);
+    await setStorage("navigationHistory", JSON.stringify(updatedHistory));
+    router.push(path);
   };
 
   /** 返回上一个访问的页面 */
-  const goBack = () => {
-    if (historyRef.current.length > 1) {
-      historyRef.current.pop(); // 移除当前页面
-      const previousPage = historyRef.current[historyRef.current.length - 1];
-      router.replace(previousPage as Href);
+  const goBack = async () => {
+    if (history.length > 1) {
+      const updatedHistory = history.slice(0, -1);
+      setHistory(updatedHistory);
+      await setStorage("navigationHistory", JSON.stringify(updatedHistory));
+      router.replace(updatedHistory[updatedHistory.length - 1]);
     } else {
-      router.back(); // 如果没有历史记录，则执行默认返回
+      router.back();
     }
   };
 
   return { navigate, goBack };
 }
+
 /*
 // 使用示例
 import { useNavigationHistory } from "@/libs/hooks/useNavigationHistory";

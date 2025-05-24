@@ -11,8 +11,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import { useDisableScroll } from "@/hooks/useDisableScroll";
+import { useNavigationHistory } from "@/hooks/useNavigationHistory";
 
 const ChatsScreen = () => {
+  const { navigate, goBack } = useNavigationHistory();
   const [messages, setMessages] = useState([
     { id: "1", text: "你好！" },
     { id: "2", text: "最近怎么样？" }
@@ -32,6 +35,7 @@ const ChatsScreen = () => {
     inputRef.current?.focus(); // 发送后保持焦点，让键盘不消失
   };
 
+  /*
   useEffect(() => {
 
     document.body.style.overflow = "hidden"; // 禁止页面整体滚动
@@ -41,6 +45,9 @@ const ChatsScreen = () => {
       document.documentElement.style.overscrollBehavior = "auto"; // 恢复页面整体滚动
     };
   }, []);
+  */
+  // 禁用页面整体滚动
+  useDisableScroll(true);
 
   return (
     <KeyboardAvoidingView 
@@ -60,7 +67,9 @@ const ChatsScreen = () => {
           <View style={styles.header} 
            onStartShouldSetResponder={() => true} // 在 header 组件中添加 onStartShouldSetResponder={() => true} 这样可以阻止页面整体滚动：
           >
-            <Text style={styles.headerText}>微信聊天</Text>
+            <TouchableOpacity onPress={goBack}>
+              <Text style={styles.headerText}>微信聊天</Text>
+            </TouchableOpacity>
           </View>
 
           {/* 聊天信息列表 - 仅允许滚动此区域 */}
