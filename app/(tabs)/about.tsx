@@ -7,7 +7,10 @@ export default function AboutScreen() {
     useDisableScroll(true);
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
+            <View 
+                style={styles.header}
+                onStartShouldSetResponder={() => true} // 在 header 组件中添加 onStartShouldSetResponder={() => true} 这样可以阻止页面整体滚动：
+            >
                 <TouchableOpacity onPress={goBack}>
                     <Text style={styles.headerText}>返回</Text>
                 </TouchableOpacity>
@@ -19,7 +22,9 @@ export default function AboutScreen() {
             <FlatList
                 data={Array.from({ length: 100 }, (_, i) => ({ id: String(i), text: "Item " + i }))}
                 renderItem={({ item }) => (
-                    <Text style={styles.item}>{item.text}</Text>
+                    <View style={styles.itemContainer}>
+                        <Text style={styles.itemText}>{item.text}</Text>
+                    </View>
                 )}
                 keyExtractor={(item) => item.id}
                 scrollEnabled={true}
@@ -45,6 +50,7 @@ const styles = StyleSheet.create({
         top: 0,
         width: "100%",
         zIndex: 100,
+        paddingHorizontal: 20,
     },
     headerText: {
         color: "white",
@@ -55,11 +61,14 @@ const styles = StyleSheet.create({
         paddingTop: 60,
         paddingBottom: 50,
     },
-    item: {
+    itemContainer: {
+        backgroundColor: "#ccc",
+        marginVertical: 2,
+    },
+    itemText: {
         height: 50,
         lineHeight: 50,
         textAlign: "center",
-        backgroundColor: "#ccc",
-        marginVertical: 2,
+        fontSize: 16,
     }
 })

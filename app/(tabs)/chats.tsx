@@ -10,9 +10,39 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
+  Animated,
+  LayoutAnimation,
+  UIManager
 } from "react-native";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
 import { useNavigationHistory } from "@/hooks/useNavigationHistory";
+
+
+const AnimatedMessage = ({ text }: { text: string }) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(10)).current; // 从底部 30px 位置开始
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  return (
+    <Animated.View style={[styles.messageContainer, { opacity: fadeAnim, transform: [{ translateY }] }]}>
+      <Text style={styles.messageText}>{text}</Text>
+    </Animated.View>
+  );
+};
 
 const ChatsScreen = () => {
   const { navigate, goBack } = useNavigationHistory();
@@ -24,12 +54,21 @@ const ChatsScreen = () => {
   const flatListRef = useRef<FlatList>(null);
   const inputRef = useRef<TextInput>(null);
 
+
+  if (Platform.OS === "android") {
+    if (UIManager.setLayoutAnimationEnabledExperimental) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+  }
+
   useEffect(() => {
     flatListRef.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
+
   const sendMessage = () => {
     if (!input.trim()) return;
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setMessages([...messages, { id: String(messages.length + 1), text: input }]);
     setInput("");
     inputRef.current?.focus(); // 发送后保持焦点，让键盘不消失
@@ -50,8 +89,8 @@ const ChatsScreen = () => {
   useDisableScroll(true);
 
   return (
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === "ios" ? "padding" : "height"} 
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
       <TouchableWithoutFeedback
@@ -64,11 +103,16 @@ const ChatsScreen = () => {
       >
         <View style={styles.inner}>
           {/* 头部导航 - 始终固定 */}
-          <View style={styles.header} 
-           onStartShouldSetResponder={() => true} // 在 header 组件中添加 onStartShouldSetResponder={() => true} 这样可以阻止页面整体滚动：
+          <View
+            style={styles.header}
+            onStartShouldSetResponder={() => true} // 在 header 组件中添加 onStartShouldSetResponder={() => true} 这样可以阻止页面整体滚动：
           >
             <TouchableOpacity onPress={goBack}>
-              <Text style={styles.headerText}>微信聊天</Text>
+              <Text style={styles.headerText}>返回</Text>
+            </TouchableOpacity>
+            <Text style={styles.headerText}>微信聊天</Text>
+            <TouchableOpacity onPress={() => { }}>
+              <Text style={styles.headerText}>...</Text>
             </TouchableOpacity>
           </View>
 
@@ -78,9 +122,7 @@ const ChatsScreen = () => {
             data={messages}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <View style={styles.messageContainer}>
-                <Text style={styles.messageText}>{item.text}</Text>
-              </View>
+              <AnimatedMessage text={item.text} />
             )}
             contentContainerStyle={styles.messagesList}
             scrollEnabled={true} // 确保聊天列表可滚动
@@ -122,14 +164,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     height: 60,
     backgroundColor: "#007aff",
-    justifyContent: "center",
     alignItems: "center",
     position: "absolute",
     top: 0,
     width: "100%",
     zIndex: 100,
+    paddingHorizontal: 20,
   },
   headerText: {
     color: "white",
@@ -147,6 +191,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 5,
     alignSelf: "flex-start",
+    ...(Platform.OS === "web" && {
+      transition: "opacity 0.5s ease-in-out, transform 0.5s ease-in-out",
+      transform: "translateY(30px)",
+    }),
   },
   messageText: {
     fontSize: 16,
