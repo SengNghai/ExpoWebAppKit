@@ -14,8 +14,9 @@ import {
   LayoutAnimation,
   UIManager
 } from "react-native";
+
 import { useDisableScroll } from "@/hooks/useDisableScroll";
-import { useNavigationHistory } from "@/hooks/useNavigationHistory";
+import { useNavigationManager } from "@/hooks/useNavigationManager";
 
 
 const AnimatedMessage = ({ text }: { text: string }) => {
@@ -45,7 +46,7 @@ const AnimatedMessage = ({ text }: { text: string }) => {
 };
 
 const ChatsScreen = () => {
-  const { navigate, goBack } = useNavigationHistory();
+  const { navigateTo, goBack } = useNavigationManager();
   const [messages, setMessages] = useState([
     { id: "1", text: "你好！" },
     { id: "2", text: "最近怎么样？" }

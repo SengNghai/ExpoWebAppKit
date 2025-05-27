@@ -1,10 +1,14 @@
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
-import { useNavigationHistory } from "@/hooks/useNavigationHistory";
+import { useNavigationManager } from "@/hooks/useNavigationManager";
 import { useDisableScroll } from "@/hooks/useDisableScroll";
+import { Image } from 'expo-image';
 
 export default function AboutScreen() {
-    const { goBack } = useNavigationHistory();
+    const { goBack } = useNavigationManager();
     useDisableScroll(true);
+
+    const blurhash = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPFxqRYsT_F9tT7jc1mA4ZMYcd7Cs0GEMGAQ&s';
+
     return (
         <View style={styles.container}>
             <View 
@@ -18,6 +22,12 @@ export default function AboutScreen() {
                 <TouchableOpacity onPress={() => { }}>
                     <Text style={styles.headerText}>...</Text>
                 </TouchableOpacity>
+            </View>
+            <View style={styles.blurhashContainer}>
+                <Image
+                    source={{ uri: blurhash }}
+                    style={styles.blurhash}
+                />
             </View>
             <FlatList
                 data={Array.from({ length: 100 }, (_, i) => ({ id: String(i), text: "Item " + i }))}
@@ -39,6 +49,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#fff",
+    },
+    blurhashContainer: {
+        height: 200,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    blurhash: {
+        width: 100,
+        height: 100,
+        overflow: "hidden",
+        borderRadius: 100,
     },
     header: {
         flexDirection: "row",
